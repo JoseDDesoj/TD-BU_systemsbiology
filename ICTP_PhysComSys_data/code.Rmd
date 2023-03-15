@@ -1,0 +1,91 @@
+---
+title: "Untitled"
+output: html_document
+date: "2023-03-15"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+https://drive.google.com/drive/folders/179RPo-TjtwujIsqXIZu3oB7SV-xhW2he?usp=share_link
+
+# Central dogma exploratory analysis
+
+```{r}
+Ecoli_genes  <- read.csv("Ecoli_gene_functional_annotations.csv", row.names = 1)
+intersect(rownames(Dogma), Ecoli_genes$gene) -> keep
+
+Ecoli_genes <- Ecoli_genes[Ecoli_genes$gene%in%keep,]
+Dogma <- Dogma[rownames(Dogma)%in%keep,]
+
+Ecoli_genes <- Ecoli_genes[match(rownames(Dogma), Ecoli_genes$gene),]
+
+par(mar=c(3,20,3,3))
+boxplot(log(Dogma$protein.concentration..Pi...1.µm3.)~Ecoli_genes$functional_category_desc,las=2, horizontal=T, ylab="")
+abline(v=mean(log(Dogma$protein.concentration..Pi...1.µm3.), na.rm=T), lwd=2, col=2)
+
+
+```
+```{r}
+plot(Dogma$mRNA.concentration..mRi...1.µm3., Dogma$protein.concentration..Pi...1.µm3., log="xy", pch=20)
+
+```
+
+
+```{r}
+
+
+par(mfrow=c(1,2))
+hist(Ecoli_genes$protein_len, xlab="protein length")
+abline(v=mean(Ecoli_genes$protein_len), lwd=2, lty=2, col="red")
+abline(v=median(Ecoli_genes$protein_len), lwd=2, lty=2, col="blue")
+mean(Ecoli_genes$protein_len)
+median(Ecoli_genes$protein_len)
+
+
+
+boxplot(Ecoli_genes$protein_len, xlab="protein length")
+
+Ecoli_genes$gene.length..nt.
+```
+
+```{r}
+L <- split(Ecoli_genes$protein_len, Ecoli_genes$functional_category_desc)
+Means <- sapply(L, mean)
+par(mar=c(3,20,3,3))
+barplot(sort(Means), horiz=T, las=2)
+
+
+Sds <- sapply(L, sd)
+
+par(mar=c(3,20,3,3))
+boxplot(Ecoli_genes$protein_len~factor(Ecoli_genes$functional_category_desc, levels=names(Means)[order(Means)]), las=2, horizontal=T, ylab="")
+```
+
+
+# genomics 
+```{r}
+
+```
+
+
+# proteomics
+```{r}
+
+
+
+Data <- read.csv(paste0(Dir, "Hui2015_proteomics_relativeExpression.csv"), row.names = 1)
+
+
+```
+
+```{r}
+read.csv(paste0(Dir, "Hui2015_proteomics_colMetadata"), row.names = 1)
+read.csv(paste0(Dir, "Hui2015_proteomics_rowMetadata"), row.names = 1)
+
+read.csv(paste0(Dir, "Balakrishnan2022_proteomics_fractions.csv"), row.names = 1)
+read.csv(paste0(Dir, "Balakrishnan2022_proteomics_colMetadata.csv"), row.names = 1)
+read.csv(paste0(Dir, "Balakrishnan2022_proteomics_rowMetadata.csv"), row.names = 1)
+```
+
